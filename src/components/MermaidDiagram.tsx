@@ -22,23 +22,23 @@ export default function MermaidDiagram({ chart, className = "" }: MermaidDiagram
           startOnLoad: false,
           theme: "base",
           themeVariables: {
-            primaryColor: "#161614",
-            primaryTextColor: "#e8e6e1",
-            primaryBorderColor: "#3d3d38",
-            lineColor: "#6b6962",
-            secondaryColor: "#1a1a18",
-            tertiaryColor: "#0e0e0d",
-            background: "#161614",
-            mainBkg: "#161614",
-            nodeBorder: "#3d3d38",
-            clusterBkg: "#0e0e0d",
-            clusterBorder: "#2a2a26",
-            titleColor: "#9c9a93",
-            edgeLabelBackground: "#161614",
+            primaryColor: "#f3f2ef",
+            primaryTextColor: "#1a1a18",
+            primaryBorderColor: "#e6e4df",
+            lineColor: "#8a8a85",
+            secondaryColor: "#ffffff",
+            tertiaryColor: "#f9f8f6",
+            background: "#ffffff",
+            mainBkg: "#f3f2ef",
+            nodeBorder: "#e6e4df",
+            clusterBkg: "#f9f8f6",
+            clusterBorder: "#eeece8",
+            titleColor: "#5a5a56",
+            edgeLabelBackground: "#ffffff",
             fontFamily: "Source Sans 3, sans-serif",
             fontSize: "13px",
           },
-          flowchart: { curve: "linear", padding: 12 },
+          flowchart: { curve: "basis", padding: 16 },
         });
 
         const id = `mermaid-${Math.random().toString(36).slice(2, 9)}`;
@@ -55,7 +55,7 @@ export default function MermaidDiagram({ chart, className = "" }: MermaidDiagram
 
   if (error) {
     return (
-      <div className="border border-[var(--warn)] bg-[var(--bg-code)] p-4 text-sm text-[var(--warn)]">
+      <div className="callout-warn text-sm text-[var(--warn)]">
         Diagram error: {error}
       </div>
     );

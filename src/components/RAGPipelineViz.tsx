@@ -68,13 +68,13 @@ export default function RAGPipelineViz() {
         <button
           onClick={play}
           disabled={playing}
-          className="font-[family-name:var(--font-ibm-mono)] text-[0.625rem] text-[var(--accent)] disabled:opacity-40"
+          className="font-mono text-[0.625rem] text-[var(--accent)] disabled:opacity-40"
         >
           {playing ? "running…" : "run sequence"}
         </button>
       </div>
       <div className="panel-body">
-        <div className="mb-6 flex gap-0 border-b border-[var(--border)]">
+        <div className="mb-6 flex gap-0 border-b border-[var(--border-subtle)]">
           {steps.map((s, i) => (
             <button
               key={s.id}
@@ -83,11 +83,11 @@ export default function RAGPipelineViz() {
                 i === active
                   ? "border-[var(--accent)] text-[var(--text)]"
                   : i < active
-                    ? "border-[var(--border-strong)] text-[var(--text-secondary)]"
+                    ? "border-[var(--border)] text-[var(--text-secondary)]"
                     : "border-transparent text-[var(--text-muted)]"
               }`}
             >
-              <span className="block font-[family-name:var(--font-ibm-mono)] text-[0.625rem]">
+              <span className="block font-mono text-[0.625rem]">
                 {String(i + 1).padStart(2, "0")}
               </span>
               <span className="mt-1 block text-xs">{s.label}</span>
@@ -106,7 +106,7 @@ export default function RAGPipelineViz() {
             <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
               {steps[active].description}
             </p>
-            <p className="mt-3 font-[family-name:var(--font-ibm-mono)] text-[0.625rem] text-[var(--text-muted)]">
+            <p className="mt-3 meta-mono">
               {steps[active].services.join(" → ")}
             </p>
           </motion.div>

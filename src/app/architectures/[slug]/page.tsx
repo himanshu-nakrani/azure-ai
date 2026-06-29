@@ -1,7 +1,9 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { architectures, getArchitecture } from "@/data/architectures";
+import { getCategory } from "@/data/categories";
 import MermaidDiagram from "@/components/MermaidDiagram";
+import ArchitectureInsights from "@/components/ArchitectureInsights";
 
 export function generateStaticParams() {
   return architectures.map((a) => ({ slug: a.slug }));
@@ -15,7 +17,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const arch = getArchitecture(slug);
   if (!arch) return { title: "Not Found" };
-  return { title: `${arch.title} — Azure AI Academy`, description: arch.description };
+  return { title: `${arch.title} — Azure Academy`, description: arch.description };
 }
 
 export default async function ArchitecturePage({
@@ -27,63 +29,39 @@ export default async function ArchitecturePage({
   const arch = getArchitecture(slug);
   if (!arch) notFound();
 
-  const archIndex = architectures.findIndex((a) => a.slug === slug);
+  const cat = getCategory(arch.category);
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-12">
-      <Link
-        href="/architectures"
-        className="font-[family-name:var(--font-ibm-mono)] text-xs text-[var(--text-muted)] no-underline hover:text-[var(--accent)]"
-      >
+    <div className="content py-12">
+      <Link href="/architectures" className="back-link">
         ← architectures
       </Link>
 
-      <header className="page-header mt-6">
-        <p className="section-label mb-3">
-          Pattern A{archIndex + 1} · {arch.complexity} complexity
-        </p>
-        <h1>{arch.title}</h1>
-        <p>{arch.description}</p>
-        <p className="mt-3 font-[family-name:var(--font-ibm-mono)] text-[0.625rem] text-[var(--text-muted)]">
+      <header className="module-hero mt-6">
+        <div className="module-hero-meta">
+          <span className={`difficulty-badge difficulty-${arch.complexity === "low" ? "foundational" : arch.complexity === "medium" ? "intermediate" : "advanced"}`}>
+            {arch.complexity} complexity
+          </span>
+          <span className="meta-mono">{cat?.icon} {cat?.title}</span>
+        </div>
+        <h1 className="module-hero-title">{arch.title}</h1>
+        <p className="module-hero-sub">{arch.description}</p>
+        <p className="scenario-hook-challenge mt-4">
+          <span className="scenario-hook-arrow">→</span>
           {arch.useCase}
         </p>
       </header>
 
       <section className="mb-12">
-        <p className="section-label mb-3">Diagram</p>
+        <p className="section-label mb-3">Live diagram — click through the flow</p>
         <MermaidDiagram chart={arch.mermaidDiagram} />
       </section>
 
-      <div className="grid gap-10 sm:grid-cols-2">
-        <section>
-          <p className="section-label mb-3">Design notes</p>
-          <ul className="space-y-3">
-            {arch.considerations.map((c) => (
-              <li key={c} className="border-l border-[var(--border-strong)] pl-3 text-sm text-[var(--text-secondary)]">
-                {c}
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section>
-          <p className="section-label mb-3">Cost drivers</p>
-          <ul className="space-y-3">
-            {arch.costDrivers.map((c) => (
-              <li key={c} className="border-l border-[var(--border-strong)] pl-3 text-sm text-[var(--text-secondary)]">
-                {c}
-              </li>
-            ))}
-          </ul>
-        </section>
-      </div>
-
-      <section className="mt-10 border-t border-[var(--border)] pt-8">
-        <p className="section-label mb-3">Services</p>
-        <p className="font-[family-name:var(--font-ibm-mono)] text-xs text-[var(--text-muted)]">
-          {arch.services.join(" · ")}
-        </p>
-      </section>
+      <ArchitectureInsights
+        considerations={arch.considerations}
+        costDrivers={arch.costDrivers}
+        services={arch.services}
+      />
     </div>
   );
 }

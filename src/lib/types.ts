@@ -7,43 +7,43 @@ export interface LearningSection {
   warning?: string;
 }
 
+export interface ServiceCategory {
+  slug: string;
+  title: string;
+  description: string;
+  icon: string;
+  services: string[];
+}
+
+export interface ModuleHook {
+  setup: string;
+  challenge: string;
+}
+
 export interface LearningModule {
   slug: string;
+  category: string;
   title: string;
   subtitle: string;
   description: string;
   difficulty: "foundational" | "intermediate" | "advanced";
   duration: string;
   services: string[];
-  exams: string[];
+  hook?: ModuleHook;
   sections: LearningSection[];
   quiz?: { question: string; options: string[]; answer: number; explanation: string }[];
 }
 
-export interface ExamSkillArea {
-  name: string;
-  weight: string;
-  topics: string[];
-}
-
-export interface Certification {
+export interface LearningPath {
   slug: string;
-  examCode: string;
   title: string;
-  level: "fundamentals" | "associate";
-  status: "active" | "retiring";
-  retirementDate?: string;
-  duration: string;
-  passingScore: number;
-  description: string;
-  moduleSlugs: string[];
-  skillAreas: ExamSkillArea[];
-  studyGuideUrl: string;
-  certUrl: string;
+  tagline: string;
+  modules: string[];
 }
 
 export interface ArchitecturePattern {
   slug: string;
+  category: string;
   title: string;
   description: string;
   useCase: string;
@@ -52,20 +52,4 @@ export interface ArchitecturePattern {
   mermaidDiagram: string;
   considerations: string[];
   costDrivers: string[];
-}
-
-export interface VizNode {
-  id: string;
-  label: string;
-  type: "service" | "data" | "compute" | "network" | "user";
-  x: number;
-  y: number;
-  description: string;
-}
-
-export interface VizEdge {
-  from: string;
-  to: string;
-  label?: string;
-  animated?: boolean;
 }

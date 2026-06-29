@@ -24,9 +24,21 @@ function highlightJson(code: string): string {
     .replace(/:\s*("(?:[^"\\]|\\.)*")/g, ': <span class="string">$1</span>');
 }
 
+function escapeHtml(code: string): string {
+  return code
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
 export default function CodeBlock({ code, language = "python" }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
-  const highlighted = language === "json" ? highlightJson(code) : highlightPython(code);
+  const highlighted =
+    language === "json"
+      ? highlightJson(code)
+      : language === "bicep"
+        ? escapeHtml(code)
+        : highlightPython(code);
 
   async function handleCopy() {
     await navigator.clipboard.writeText(code);
@@ -38,7 +50,7 @@ export default function CodeBlock({ code, language = "python" }: CodeBlockProps)
     <div className="group relative">
       <button
         onClick={handleCopy}
-        className="absolute right-2 top-2 z-10 font-[family-name:var(--font-ibm-mono)] text-[0.625rem] text-[var(--text-muted)] opacity-0 transition-opacity group-hover:opacity-100 hover:text-[var(--text)]"
+        className="absolute right-2 top-2 z-10 font-mono text-[0.625rem] text-[var(--text-muted)] opacity-0 transition-opacity group-hover:opacity-100 hover:text-[var(--text)]"
       >
         {copied ? "copied" : "copy"}
       </button>

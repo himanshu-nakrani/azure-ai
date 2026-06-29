@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Source_Sans_3, IBM_Plex_Mono, Newsreader } from "next/font/google";
+import { Source_Sans_3, DM_Mono, Fraunces } from "next/font/google";
 import Navigation from "@/components/Navigation";
 import "./globals.css";
 
@@ -9,42 +9,39 @@ const sourceSans = Source_Sans_3({
   weight: ["400", "500", "600"],
 });
 
-const ibmMono = IBM_Plex_Mono({
-  variable: "--font-ibm-mono",
+const dmMono = DM_Mono({
+  variable: "--font-mono",
   subsets: ["latin"],
   weight: ["400", "500"],
 });
 
-const newsreader = Newsreader({
-  variable: "--font-newsreader",
+const fraunces = Fraunces({
+  variable: "--font-display",
   subsets: ["latin"],
   weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
-  title: "Azure AI Academy",
+  title: "Azure Academy",
   description:
-    "Technical reference for AI engineers building on Azure — modules, architectures, and interactive tools.",
+    "Complete learning reference for every major Azure service — compute, networking, storage, databases, AI, security, and more.",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html
       lang="en"
-      className={`${sourceSans.variable} ${ibmMono.variable} ${newsreader.variable} h-full antialiased`}
+      className={`${sourceSans.variable} ${dmMono.variable} ${fraunces.variable} h-full`}
     >
       <body className="min-h-full flex flex-col">
         <Navigation />
         <main className="flex-1">{children}</main>
-        <footer className="border-t border-[var(--border)] py-8">
-          <div className="mx-auto max-w-3xl px-6">
-            <p className="font-[family-name:var(--font-ibm-mono)] text-xs text-[var(--text-muted)]">
-              Azure AI Academy — unofficial learning reference. Not affiliated with Microsoft.
+        <footer className="mt-16 border-t border-[var(--border-subtle)] py-10">
+          <div className="content">
+            <p className="text-sm text-[var(--text-muted)]">
+              Azure Academy — unofficial reference. Not affiliated with Microsoft.
             </p>
           </div>
         </footer>

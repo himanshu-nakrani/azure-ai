@@ -81,13 +81,13 @@ export default function ServiceTopologyViz() {
                 >
                   <rect
                     x={node.x - 7} y={node.y - 3} width={14} height={6} rx={0}
-                    fill={lit ? "var(--accent-muted)" : "var(--bg-code)"}
-                    stroke={lit ? "var(--accent)" : "var(--border-strong)"}
+                    fill={lit ? "var(--accent-soft)" : "var(--surface-muted)"}
+                    stroke={lit ? "var(--accent)" : "var(--border)"}
                     strokeWidth={active === node.id ? 0.35 : 0.2}
                   />
                   <text x={node.x} y={node.y + 0.7} textAnchor="middle" fontSize={2.2}
                     fill={lit ? "var(--text)" : "var(--text-muted)"}
-                    fontFamily="IBM Plex Mono, monospace"
+                    fontFamily="DM Mono, monospace"
                   >
                     {node.label}
                   </text>

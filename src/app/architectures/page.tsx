@@ -1,48 +1,45 @@
-import Link from "next/link";
 import { architectures } from "@/data/architectures";
+import { categories } from "@/data/categories";
+import ArchitectureCard from "@/components/ArchitectureCard";
 
 export const metadata = {
-  title: "Architectures — Azure AI Academy",
-  description: "Production-ready Azure AI architecture patterns",
+  title: "Architectures — Azure Academy",
+  description: "Production-ready Azure architecture patterns",
 };
 
 export default function ArchitecturesPage() {
+  const grouped = categories
+    .map((cat) => ({
+      category: cat,
+      patterns: architectures.filter((a) => a.category === cat.slug),
+    }))
+    .filter((g) => g.patterns.length > 0);
+
   return (
-    <div className="mx-auto max-w-3xl px-6 py-12">
-      <header className="page-header">
+    <div className="content py-12">
+      <header className="arch-page-hero">
         <p className="section-label mb-3">Reference designs</p>
-        <h1>Architecture patterns</h1>
-        <p>
-          Five production patterns with Mermaid diagrams, design notes, and cost
-          drivers. Use these as starting points — not copy-paste blueprints.
+        <h1 className="hero-title">Patterns that survive production</h1>
+        <p className="arch-page-sub">
+          {architectures.length} architectures with live diagrams, design calls,
+          and cost radar — not slide-deck fiction.
         </p>
       </header>
 
-      <div>
-        {architectures.map((arch, i) => (
-          <Link
-            key={arch.slug}
-            href={`/architectures/${arch.slug}`}
-            className="index-row"
-          >
-            <span className="num">A{i + 1}</span>
-            <div>
-              <div className="title">{arch.title}</div>
-              <p className="mt-1 text-sm text-[var(--text-secondary)]">
-                {arch.description}
-              </p>
-              <p className="mt-1 font-[family-name:var(--font-ibm-mono)] text-[0.625rem] text-[var(--text-muted)]">
-                {arch.services.join(" · ")}
-              </p>
-            </div>
-            <span className="meta">
-              {arch.complexity}
-              <br />
-              {arch.services.length} svc
-            </span>
-          </Link>
-        ))}
-      </div>
+      {grouped.map(({ category, patterns }) => (
+        <section key={category.slug} className="mb-14">
+          <h2 className="explorer-cat-head mb-4">
+            <span>{category.icon}</span>
+            <span className="explorer-cat-title">{category.title}</span>
+            <span className="meta-mono">{patterns.length}</span>
+          </h2>
+          <div className="arch-grid">
+            {patterns.map((arch, i) => (
+              <ArchitectureCard key={arch.slug} arch={arch} index={i} />
+            ))}
+          </div>
+        </section>
+      ))}
     </div>
   );
 }

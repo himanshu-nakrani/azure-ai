@@ -1,5 +1,11 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { LearningModule } from "@/lib/types";
+import { getModuleHook } from "@/data/module-hooks";
+import { getModuleProgress } from "@/lib/progress";
+import ProgressRing from "@/components/ProgressRing";
 
 interface ModuleCardProps {
   module: LearningModule;
@@ -7,30 +13,39 @@ interface ModuleCardProps {
 }
 
 export default function ModuleCard({ module, index }: ModuleCardProps) {
+  const hook = module.hook ?? getModuleHook(module.slug);
+  const [percent, setPercent] = useState(0);
+
+  useEffect(() => {
+    const p = getModuleProgress(module.slug);
+    if (p) {
+      setPercent(p.quizComplete ? 100 : p.scrollPercent);
+    }
+  }, [module.slug]);
+
   return (
-    <Link href={`/learn/${module.slug}`} className="index-row">
-      <span className="num">{String(index + 1).padStart(2, "0")}</span>
-      <div>
-        <div className="title">{module.title}</div>
-        <p className="mt-1 text-sm text-[var(--text-secondary)] leading-snug">
-          {module.description}
-        </p>
-        <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
-          {module.services.slice(0, 4).map((s) => (
-            <span
-              key={s}
-              className="font-[family-name:var(--font-ibm-mono)] text-[0.625rem] text-[var(--text-muted)]"
-            >
-              {s}
-            </span>
-          ))}
-        </div>
+    <Link href={`/learn/${module.slug}`} className="module-card">
+      <div className="module-card-left">
+        {percent > 0 ? (
+          <ProgressRing percent={percent} size={28} stroke={2.5} />
+        ) : (
+          <span className="module-card-num">{String(index + 1).padStart(2, "0")}</span>
+        )}
       </div>
-      <span className="meta">
-        {module.exams.join(", ")}
-        <br />
-        {module.duration}
-      </span>
+      <div className="module-card-body">
+        <div className="module-card-top">
+          <h3 className="module-card-title">{module.title}</h3>
+          <span className={`difficulty-badge difficulty-${module.difficulty}`}>
+            {module.difficulty}
+          </span>
+        </div>
+        {hook ? (
+          <p className="module-card-hook">{hook.setup}</p>
+        ) : (
+          <p className="module-card-desc">{module.description}</p>
+        )}
+      </div>
+      <span className="module-card-meta meta-mono">{module.duration}</span>
     </Link>
   );
 }

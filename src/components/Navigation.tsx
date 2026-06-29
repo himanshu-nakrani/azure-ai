@@ -3,12 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import ContinueLearning from "@/components/ContinueLearning";
 
 const links = [
-  { href: "/certifications", label: "Exams" },
+  { href: "/services", label: "Services" },
   { href: "/learn", label: "Modules" },
   { href: "/architectures", label: "Architectures" },
-  { href: "/visualizations", label: "Tools" },
+  { href: "/tools", label: "Tools" },
 ];
 
 export default function Navigation() {
@@ -16,25 +17,27 @@ export default function Navigation() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="border-b border-[var(--border)]">
-      <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-6">
+    <header className="sticky top-0 z-50 border-b border-[var(--border-subtle)] bg-[var(--bg)]/90 backdrop-blur-md">
+      <div className="content flex h-[3.75rem] items-center justify-between">
         <Link
           href="/"
-          className="font-[family-name:var(--font-newsreader)] text-base font-medium text-[var(--text)] no-underline"
+          className="font-[family-name:var(--font-display)] text-[1.0625rem] font-medium tracking-[-0.02em] text-[var(--text)] no-underline"
         >
-          Azure AI Academy
+          Azure Academy
         </Link>
 
-        <nav className="hidden items-center gap-6 md:flex">
+        <div className="hidden items-center gap-6 md:flex">
+        <ContinueLearning />
+        <nav className="flex items-center gap-8">
           {links.map(({ href, label }) => {
             const active = pathname.startsWith(href);
             return (
               <Link
                 key={href}
                 href={href}
-                className={`text-sm no-underline transition-colors ${
+                className={`text-[0.875rem] no-underline transition-colors ${
                   active
-                    ? "text-[var(--text)] border-b border-[var(--accent)] pb-0.5"
+                    ? "font-medium text-[var(--text)]"
                     : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
                 }`}
               >
@@ -43,9 +46,10 @@ export default function Navigation() {
             );
           })}
         </nav>
+        </div>
 
         <button
-          className="font-[family-name:var(--font-ibm-mono)] text-xs text-[var(--text-muted)] md:hidden"
+          className="text-sm text-[var(--text-muted)] md:hidden"
           onClick={() => setOpen(!open)}
           aria-label="Menu"
         >
@@ -54,13 +58,13 @@ export default function Navigation() {
       </div>
 
       {open && (
-        <nav className="border-t border-[var(--border)] px-6 py-3 md:hidden">
+        <nav className="border-t border-[var(--border-subtle)] px-6 py-4 md:hidden">
           {links.map(({ href, label }) => (
             <Link
               key={href}
               href={href}
               onClick={() => setOpen(false)}
-              className="block py-2 text-sm text-[var(--text-secondary)] no-underline"
+              className="block py-2.5 text-sm text-[var(--text-secondary)] no-underline"
             >
               {label}
             </Link>

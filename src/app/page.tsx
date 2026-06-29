@@ -1,91 +1,98 @@
 import Link from "next/link";
-import { modules } from "@/data/modules";
+import { categories } from "@/data/categories";
+import { modules, getModulesByCategory } from "@/data/modules/index";
 import { architectures } from "@/data/architectures";
-import ModuleCard from "@/components/ModuleCard";
+import { learningPaths } from "@/data/learning-paths";
+import LearningPathCard from "@/components/LearningPathCard";
+import OverallProgress from "@/components/OverallProgress";
 
 export default function Home() {
   return (
-    <div className="mx-auto max-w-3xl px-6 py-16">
-      <header className="mb-16">
-        <p className="section-label mb-4">Reference for AI engineers</p>
-        <h1 className="font-[family-name:var(--font-newsreader)] text-[2.75rem] font-medium leading-[1.15] tracking-[-0.02em] text-[var(--text)] sm:text-5xl">
-          Learn to ship AI systems on Azure
+    <div className="content py-16">
+      <header className="home-hero">
+        <p className="section-label mb-4">Not another doc site</p>
+        <h1 className="hero-title">
+          Azure breaks in production.<br />
+          Learn how before it does.
         </h1>
-        <p className="mt-5 max-w-xl text-[var(--text-secondary)] leading-relaxed">
-          14 modules aligned to AI-901, AI-102, AI-103, and AI-300 exam skills
-          measured objectives. Computer vision, speech, agents, document
-          extraction, MLOps, and GenAIOps — not just OpenAI chat wrappers.
+        <p className="home-hero-sub">
+          Scenario-driven modules, interactive checkpoints, and tools that
+          simulate real pipelines — {modules.length} beats across{" "}
+          {categories.length} domains.
         </p>
+        <div className="home-stats">
+          <div className="home-stat">
+            <span className="home-stat-num">{modules.length}</span>
+            <span className="home-stat-label">modules</span>
+          </div>
+          <div className="home-stat">
+            <span className="home-stat-num">{architectures.length}</span>
+            <span className="home-stat-label">architectures</span>
+          </div>
+          <div className="home-stat">
+            <span className="home-stat-num">3</span>
+            <span className="home-stat-label">live tools</span>
+          </div>
+        </div>
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link href="/certifications" className="btn-primary">
-            Certification roadmap
+          <Link href="/learn/azure-openai" className="btn-primary">
+            Jump into AI
           </Link>
-          <Link href="/learn/ai-fundamentals" className="btn-secondary">
-            Start AI-901 prep
+          <Link href="/tools" className="btn-secondary">
+            Play with tools
           </Link>
         </div>
       </header>
 
-      <section className="mb-16">
-        <div className="mb-4 flex items-baseline justify-between border-b border-[var(--border)] pb-2">
-          <h2 className="section-label">Exams covered</h2>
-          <Link
-            href="/certifications"
-            className="font-[family-name:var(--font-ibm-mono)] text-[0.625rem] text-[var(--text-muted)] no-underline hover:text-[var(--accent)]"
-          >
-            full roadmap →
-          </Link>
+      <OverallProgress />
+
+      <section className="mb-16 mt-12">
+        <div className="section-head">
+          <h2 className="section-label">Pick a path</h2>
         </div>
-        <div className="grid gap-px bg-[var(--border)] sm:grid-cols-2">
-          {[
-            { code: "AI-901", name: "AI Fundamentals", status: "active" },
-            { code: "AI-102", name: "AI Engineer", status: "retiring Jun 2026" },
-            { code: "AI-103", name: "AI Apps & Agents", status: "active" },
-            { code: "AI-300", name: "MLOps / GenAIOps", status: "active" },
-          ].map((exam) => (
-            <Link
-              key={exam.code}
-              href={`/certifications/${exam.code.toLowerCase()}`}
-              className="bg-[var(--bg-raised)] p-4 no-underline hover:bg-[var(--bg-code)]"
-            >
-              <span className="font-[family-name:var(--font-ibm-mono)] text-xs text-[var(--accent)]">
-                {exam.code}
-              </span>
-              <p className="mt-1 text-sm text-[var(--text)]">{exam.name}</p>
-              <p className="mt-0.5 font-[family-name:var(--font-ibm-mono)] text-[0.625rem] text-[var(--text-muted)]">
-                {exam.status}
-              </p>
-            </Link>
+        <div className="path-grid">
+          {learningPaths.map((path) => (
+            <LearningPathCard key={path.slug} path={path} />
           ))}
         </div>
       </section>
 
       <section className="mb-16">
-        <div className="mb-4 flex items-baseline justify-between border-b border-[var(--border)] pb-2">
-          <h2 className="section-label">Modules</h2>
-          <Link
-            href="/learn"
-            className="font-[family-name:var(--font-ibm-mono)] text-[0.625rem] text-[var(--text-muted)] no-underline hover:text-[var(--accent)]"
-          >
-            all 6 →
+        <div className="section-head">
+          <h2 className="section-label">Service categories</h2>
+          <Link href="/services" className="meta-mono no-underline hover:text-[var(--accent)]">
+            all {categories.length} →
           </Link>
         </div>
-        {modules.map((m, i) => (
-          <ModuleCard key={m.slug} module={m} index={i} />
-        ))}
+        {categories.map((cat) => {
+          const count = getModulesByCategory(cat.slug).length;
+          return (
+            <Link
+              key={cat.slug}
+              href={`/services/${cat.slug}`}
+              className="index-row"
+            >
+              <span className="num">{cat.icon}</span>
+              <div>
+                <div className="title">{cat.title}</div>
+                <p className="mt-1 text-sm text-[var(--text-secondary)]">
+                  {cat.description}
+                </p>
+              </div>
+              <span className="meta">{count} modules</span>
+            </Link>
+          );
+        })}
       </section>
 
       <section className="mb-16">
-        <div className="mb-4 flex items-baseline justify-between border-b border-[var(--border)] pb-2">
+        <div className="section-head">
           <h2 className="section-label">Architecture patterns</h2>
-          <Link
-            href="/architectures"
-            className="font-[family-name:var(--font-ibm-mono)] text-[0.625rem] text-[var(--text-muted)] no-underline hover:text-[var(--accent)]"
-          >
-            all 5 →
+          <Link href="/architectures" className="meta-mono no-underline hover:text-[var(--accent)]">
+            explore →
           </Link>
         </div>
-        {architectures.map((arch, i) => (
+        {architectures.slice(0, 4).map((arch, i) => (
           <Link
             key={arch.slug}
             href={`/architectures/${arch.slug}`}
@@ -101,17 +108,6 @@ export default function Home() {
             <span className="meta">{arch.complexity}</span>
           </Link>
         ))}
-      </section>
-
-      <section className="border-t border-[var(--border)] pt-10">
-        <h2 className="section-label mb-3">Interactive tools</h2>
-        <p className="mb-4 text-sm text-[var(--text-secondary)]">
-          Step through a RAG pipeline, map service dependencies, and estimate
-          token costs across model tiers.
-        </p>
-        <Link href="/visualizations" className="btn-secondary">
-          Open tools
-        </Link>
       </section>
     </div>
   );
